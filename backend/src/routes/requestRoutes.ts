@@ -1,6 +1,5 @@
 import express from "express";
-import { join } from "node:path/win32";
-// import pgQuery from "../db/models/postgresModel";
+import pgQuery from "../db/models/postgresModel";
 
 const requestRouter = express.Router();
 

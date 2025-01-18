@@ -8,20 +8,24 @@ const genId = () => {};
 
 webRouter.post("/", async (req, res) => {
   let id = genId();
-  let duplicateCheck;
   try {
+    let duplicateCheck;
+    let rowCount;
+    let tryCount = 3;
     do {
       duplicateCheck = await pgQuery(
         `
-        SELECT * FROM bucket
-        WHERE uuid = $1;
-        `,
+      SELECT * FROM bucket
+      WHERE uuid = $1;
+      `,
         [id],
       );
-      if (duplicateCheck.rowCount > 0) {
-        id = genId();
+      tryCount--;
+
+      if (duplicateCheck) {
+        rowCount === duplicateCheck.rowCount;
       }
-    } while (duplicateCheck.rowCount > 0);
+    } while (!rowCount || (rowCount > 0 && tryCount > 0));
 
     const result = await pgQuery(
       "INSERT INTO TABLE bucket (UUID) VALUES ($1); ",
