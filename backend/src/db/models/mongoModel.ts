@@ -1,37 +1,41 @@
 import mongoose from "mongoose";
 
-// mongoose.set("strictQuery", false);
+mongoose.set("strictQuery", false);
 
-// console.log(process.env.MONGO_URL);
+console.log(process.env.MONGO_URL);
 
-// mongoose
-//   .connect(process.env.MONGO_URL!)
-//   .then((result) => {
-//     console.log("connected to MongoDB");
-//   })
-//   .catch((error) => {
-//     console.log("error connecting to MongoDB:", error.message);
-//   });
+mongoose
+  .connect(process.env.MONGO_URL!)
+  .then(() => {
+    console.log("connected to MongoDB");
+  })
+  .catch((error: unknown) => {
+    if (error instanceof Error) {
+      console.log("error connecting to MongoDB:", error.message);
+    } else {
+      console.log("error connecting to MongoDB: unknown error");
+    } 
+  });
 
-// const pingSchema = new mongoose.Schema({
-//   createdAt: { type: Date, required: true },
-// });
+const bodySchema = new mongoose.Schema({
+  body: { type: String, required: true }
+}, { timestamps: true });
 
-// pingSchema.set("toJSON", {
-//   transform: (document, returnedObject) => {
-//     returnedObject.id = returnedObject._id.toString();
-//     delete returnedObject._id;
-//     delete returnedObject.__v;
-//   },
-// });
+bodySchema.set("toJSON", {
+  transform: (document, returnedObject) => {
+    returnedObject.id = returnedObject._id.toString();
+    delete returnedObject._id;
+    delete returnedObject.__v;
+  },
+});
 
-// pingSchema.set("toObject", {
-//   transform: (document, returnedObject) => {
-//     returnedObject.id = returnedObject._id.toString();
-//     delete returnedObject._id;
-//     delete returnedObject.__v;
-//   },
-// });
+bodySchema.set("toObject", {
+  transform: (document, returnedObject) => {
+    returnedObject.id = returnedObject._id.toString();
+    delete returnedObject._id;
+    delete returnedObject.__v;
+  },
+});
 
-// const Ping = mongoose.model("ping", pingSchema);
-// export default Ping;
+const Body = mongoose.model("body", bodySchema);
+export default Body;
