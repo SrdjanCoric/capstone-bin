@@ -7,12 +7,13 @@ const webRouter = express.Router();
 const genId = () => {};
 
 webRouter.post("/", async (req, res) => {
-  let id = genId();
   try {
+    let id;
     let duplicateCheck;
     let rowCount;
     let tryCount = 3;
     do {
+      id = genId();
       duplicateCheck = await pgQuery(
         `
       SELECT * FROM bucket
@@ -25,7 +26,11 @@ webRouter.post("/", async (req, res) => {
       if (duplicateCheck) {
         rowCount = duplicateCheck.rowCount;
       }
-    } while (!rowCount || (rowCount > 0 && tryCount > 0));
+    } while ((!rowCount || rowCount > 0) && tryCount > 0);
+
+    if (tryCount === 0) {
+      throw new Error("Failed to generate unique id");
+    }
 
     const result = await pgQuery(
       "INSERT INTO TABLE bucket (UUID) VALUES ($1); ",
@@ -35,6 +40,7 @@ webRouter.post("/", async (req, res) => {
     res.json(id);
     return;
   } catch (e: unknown) {
+    console.log(e);
     res.status(500);
     return;
   }
