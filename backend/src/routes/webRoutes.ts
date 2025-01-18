@@ -1,74 +1,99 @@
 import express from "express";
 
 import pgQuery from "../db/models/postgresModel";
+import Body from "../db/models/mongoModel";
+
+import { genId } from "../utils/utils";
 
 const webRouter = express.Router();
 
-const genId = () => {};
-
-webRouter.post("/", async (req, res) => {
+webRouter.post("", async (req, res) => {
   try {
-    let id;
-    let duplicateCheck;
-    let rowCount;
-    let tryCount = 3;
-    do {
-      id = genId();
-      duplicateCheck = await pgQuery(
-        `
-      SELECT * FROM bucket
-      WHERE uuid = $1;
-      `,
+    let attempts = 3;
+
+    while (attempts > 0) {
+      const id = genId();
+
+      // Check for existing ID
+      const existingCheck = await pgQuery<{ uuid: string }>(
+        "SELECT uuid FROM bucket WHERE uuid = $1",
         [id],
       );
-      tryCount--;
 
-      if (duplicateCheck) {
-        rowCount = duplicateCheck.rowCount;
+      // Retry if found duplicate found
+      if (!existingCheck || existingCheck.rows.length > 0) {
+        attempts--;
+        continue;
+      } else {
+        // Insert UUID when unique
+        const result = await pgQuery<{ uuid: string }>(
+          "INSERT INTO bucket (uuid) VALUES ($1) RETURNING uuid",
+          [id],
+        );
+
+        // Check insert was successful
+        if (!result || result.rows.length === 0) {
+          attempts--;
+          continue;
+        }
+
+        // Respond with new UUID
+        res.json(result.rows[0].uuid);
+        return;
       }
-    } while ((!rowCount || rowCount > 0) && tryCount > 0);
-
-    if (tryCount === 0) {
-      throw new Error("Failed to generate unique id");
     }
 
-    const result = await pgQuery(
-      "INSERT INTO TABLE bucket (UUID) VALUES ($1); ",
-      [id],
-    );
-
-    res.json(id);
-    return;
+    throw new Error("Failed to generate unique ID after multiple attempts");
   } catch (e: unknown) {
     console.log(e);
-    res.status(500);
-    return;
+    res.status(500).send();
   }
 });
 
 webRouter.get("/:id", async (req, res) => {
   const uuid = req.params.id;
   try {
-    const sqlResults = await pgQuery(
+    const queryResult = await pgQuery(
       `SELECT
-        r.*
-    FROM
-        bucket b
-    JOIN
-        request r ON b.id = r.bucket_id
-    WHERE
-        b.uuid = 1$
-    ORDER BY
-        r.request_time DESC;`,
+          r.*
+       FROM
+          bucket b
+       JOIN
+          request r ON b.id = r.bucket_id
+       WHERE
+          b.uuid = $1
+       ORDER BY
+          r.request_time DESC;`,
       [uuid],
     );
 
-    //iterate through rows and get all mongo_ids
-    //query mongo for bodys
-    //stitch together mongo and postgres data.
-    //return results
+    if (!queryResult) {
+      res.status(404).send();
+      return;
+    }
+    // get all mongo ids
+    const mongoIds = queryResult.rows.map((row) => row["mongo_id"]);
+
+    // query mongodb for body documents
+    const bodyDocuments = await Body.find({ _id: { $in: mongoIds } });
+
+    // reconcile mongo data with postgres data
+    const requests = [];
+    for (let i = 0; i < queryResult.rows.length; i++) {
+      let current = queryResult.rows[i];
+      let currentBody = bodyDocuments.find((b) => b.id === current["mongo_id"]);
+      requests.push({
+        url: current["url"],
+        method: current["method"],
+        requestTime: current["request_time"],
+        headers: current["headers"],
+        body: currentBody ? currentBody.body : "{}",
+      });
+    }
+
+    res.json(requests);
   } catch (e: unknown) {
-    res.status(500);
+    res.status(500).send();
     return;
   }
 });

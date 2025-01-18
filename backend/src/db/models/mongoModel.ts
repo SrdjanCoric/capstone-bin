@@ -13,13 +13,16 @@ mongoose
     if (error instanceof Error) {
       console.log("error connecting to MongoDB:", error.message);
     } else {
-      console.log("error connecting to MongoDB: unknown error");
-    } 
+      console.log("error connecting to MongoDB:", error);
+    }
   });
 
-const bodySchema = new mongoose.Schema({
-  body: { type: String, required: true }
-}, { timestamps: true });
+const bodySchema = new mongoose.Schema(
+  {
+    body: { type: String, required: true },
+  },
+  { timestamps: true },
+);
 
 bodySchema.set("toJSON", {
   transform: (document, returnedObject) => {
