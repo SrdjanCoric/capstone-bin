@@ -1,34 +1,51 @@
 import express from "express";
+
 import pgQuery from "../db/models/postgresModel";
+import Body from "../db/models/mongoModel";
 
 const requestRouter = express.Router();
 
 requestRouter.all("/:id", async (req, res) => {
   const uuid = req.params.id;
   try {
-    const bucketRow = await pgQuery("SELECT id FROM bucket WHERE uuid = 1$", [
+    // get bucket pk from bucket using uuid
+    const bucketRow = await pgQuery("SELECT id FROM bucket WHERE uuid = $1", [
       uuid,
     ]);
 
-    if (!bucketRow) {
-      res.status(404);
+    // check if the bucket was found
+    if (bucketRow && bucketRow.rows.length > 0) {
+      const bucketId = bucketRow.rows[0].id;
+
+      //extract requst data
+      const body = JSON.stringify(req.body);
+      const headers = req.headers;
+      const method = req.method;
+
+      // save body to mongo
+      const newBody = new Body({ body });
+      const savedBody = await newBody.save();
+
+      // insert request data to postgres
+      const result = await pgQuery(
+        `INSERT INTO request (bucket_id, method, headers, url_path, mongo_id)
+      values ($1, $2, $3, $4, $5);`,
+        [bucketId, method, headers, req.originalUrl, savedBody._id.toString()],
+      );
+
+      res.status(200).send();
       return;
     }
 
-    const body = req.body;
-    // add body
-    let mongoID; // =  add body to mongo recieve id
-    const headers = req.headers;
-    const method = req.method;
-    const result = await pgQuery(
-      `INSERT INTO TABLE requests (bucket_id, method, headers, mongo_id)
-      values (1$, 2$, 3$, 4$);`,
-      [bucketRow, method, headers, mongoID],
-    );
-
-    res.send(200);
+    //response with 404 when uuid cannot find valid bucket in Postgres
+    res.status(404).json({ error: "Bucket not found" });
   } catch (e: unknown) {
-    res.send(500);
+    console.log(e);
+
+    res.status(500).json({
+      error: "An error occurred",
+      details: e instanceof Error ? e.message : String(e),
+    });
   }
 });
 
