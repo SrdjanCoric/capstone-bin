@@ -1,4 +1,5 @@
 import express from "express";
+import bodyParser from "body-parser";
 import morgan from "morgan";
 import dotenv from "dotenv";
 
@@ -12,6 +13,7 @@ const PORT = process.env.EXPRESS_PORT || 3000;
 
 app.use(morgan("tiny"));
 app.use(express.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use("/web", webRouter);
 app.use("/", requestRouter);
