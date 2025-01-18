@@ -23,7 +23,7 @@ webRouter.post("/", async (req, res) => {
       tryCount--;
 
       if (duplicateCheck) {
-        rowCount === duplicateCheck.rowCount;
+        rowCount = duplicateCheck.rowCount;
       }
     } while (!rowCount || (rowCount > 0 && tryCount > 0));
 
