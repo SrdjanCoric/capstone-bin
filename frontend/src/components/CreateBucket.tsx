@@ -12,7 +12,9 @@ const CreateBucket = () => {
       <div className="window-body">
         <p>Create a bucket to collect and inspect HTTP requests!</p>
       </div>
-      <button>New Bucket</button>
+      <div className="bucket-button">
+        <button>New Bucket</button>
+      </div>
     </div>
   );
 };
