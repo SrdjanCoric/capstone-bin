@@ -9,10 +9,8 @@ const Sidebar = () => {
       <ul className="tree-view">
         {data.map((bucket) => {
           return (
-            <li>
-              <Link key={bucket.id} to={`/web/${bucket.uuid}`}>
-                {bucket.uuid}
-              </Link>
+            <li key={bucket.id}>
+              <Link to={`/web/${bucket.uuid}`}>{bucket.uuid}</Link>
             </li>
           );
         })}
