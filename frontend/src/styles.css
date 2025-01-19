@@ -21,3 +21,89 @@ body {
 .sidebar h5 {
   margin: 0px;
 }
+
+/* Container for the forum post */
+.forum-post {
+  display: flex;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 16px;
+  /* background-color: #f9f9f9; */
+  max-width: 800px;
+  margin: 16px auto;
+  /* box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); */
+}
+
+/* Left side box for post info */
+.post-info {
+  width: 20%; /* Adjust width as needed */
+  padding: 8px;
+  background-color: #e8f0fe;
+  border-right: 1px solid #ccc;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Styling for name and timestamp */
+.post-info .name {
+  font-weight: bold;
+  font-size: 1.2em;
+  margin: 0 0 8px 0;
+}
+
+.post-info .timestamp {
+  font-size: 0.9em;
+  color: #666;
+}
+
+/* Right side content for the post text */
+.post-content {
+  flex: 1; /* Takes up the remaining width */
+  padding: 8px 16px;
+  font-size: 1em;
+  line-height: 1.6;
+  color: #333;
+}
+
+/* Styling for individual boxes */
+.box {
+  flex: 1;
+  min-width: 200px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 8px;
+  background-color: #f4f4f4;
+  position: relative;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin: 5px;
+}
+
+/* Dropdown button */
+.toggle-button {
+  /* color: #fff; */
+  border: none;
+  border-radius: 4px;
+  padding: 6px 12px;
+  cursor: pointer;
+  font-size: 0.9em;
+}
+
+.toggle-button:hover {
+  background-color: rgb(159, 158, 158);
+}
+
+/* Content inside the dropdown */
+.box-content {
+  margin-top: 8px;
+  font-size: 0.9em;
+  color: #444;
+}
+
+.box p {
+  margin: 0;
+  font-size: 0.9em;
+  color: #333;
+}
