@@ -1,8 +1,16 @@
+import { createBucket } from "../services/bucketServices";
 interface CreateBucketProps {
-  togglePopup: () => void;
+  handleSuccess: (newId: string) => void;
 }
 
-const CreateBucket = ({ togglePopup }: CreateBucketProps) => {
+const CreateBucket = ({ handleSuccess }: CreateBucketProps) => {
+  const generateBucket = async () => {
+    const bucketID = await createBucket();
+    if (bucketID) {
+      handleSuccess(bucketID);
+    }
+  };
+
   return (
     <div className="window">
       <div className="title-bar">
@@ -13,7 +21,7 @@ const CreateBucket = ({ togglePopup }: CreateBucketProps) => {
         <p>Create a bucket to collect and inspect HTTP requests!</p>
       </div>
       <div className="bucket-button">
-        <button onClick={togglePopup}>New Bucket</button>
+        <button onClick={generateBucket}>New Bucket</button>
       </div>
     </div>
   );
