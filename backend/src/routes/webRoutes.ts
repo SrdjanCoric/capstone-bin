@@ -83,6 +83,7 @@ webRouter.get("/:id", async (req, res) => {
       let current = queryResult.rows[i];
       let currentBody = bodyDocuments.find((b) => b.id === current["mongo_id"]);
       requests.push({
+        id: current["id"],
         url: current["url"],
         method: current["method"],
         requestTime: current["request_time"],
