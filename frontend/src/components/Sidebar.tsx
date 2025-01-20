@@ -15,14 +15,6 @@ const Sidebar = () => {
           );
         })}
       </ul>
-
-      {/* <ul className="tree-view"> */}
-      {/* <Link to={`/web/${bucket.uuid}`}></Link> */}
-      {/* This is where each bucket UUID will be listed */}
-      {/* <li>UUID</li>
-        <li>UUID</li>
-        <li>UUID</li>
-      </ul> */}
     </div>
   );
 };

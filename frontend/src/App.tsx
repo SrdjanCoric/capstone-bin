@@ -18,19 +18,5 @@ function App() {
     </>
   );
 }
-// return (
-//   <>
-//     <div>
-//       <Routes>
-//         <Route path="/" element={<Home />}></Route>
-//         <Route path="/buckets/:bucketname" element={<BucketPage />}></Route>
-//         {/*
-//           <Route path="/buckets/1" element={<BucketPage />}></Route>
-//           <Route path="/buckets/2" element={<BucketPage />}></Route>
-//           <Route path="/buckets/3" element={<BucketPage />}></Route>
-//         */}
-//       </Routes>
-//     </div>
-//   </>
-// );
+
 export default App;
