@@ -5,7 +5,7 @@ import { RequestData } from "../types";
 // adds to local storage
 export const createBucket = async (): Promise<string | null> => {
   try {
-    const response = await fetch("http://localhost:3000/api/web", {
+    const response = await fetch("http://localhost:5173/api/web", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -38,7 +38,7 @@ export const createBucket = async (): Promise<string | null> => {
 
 // gets all buckets ids from local storage
 export const getAllBuckets = (): string[] => {
-  const ids = localStorage.get("ids") ?? "[]";
+  const ids = localStorage.getItem("ids") ?? "[]";
   return JSON.parse(ids);
 };
 
@@ -46,7 +46,7 @@ export const getAllBuckets = (): string[] => {
 // gets all data for a specific endpoint
 export const getBucketData = async (id: string): Promise<RequestData[]> => {
   try {
-    const response = await fetch(`http://localhost:3000/api/web/${id}`);
+    const response = await fetch(`http://localhost:5173/api/web/${id}`);
 
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);

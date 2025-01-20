@@ -1,16 +1,19 @@
 import { Link } from "react-router-dom";
-import data from "../dummy.json";
 
-const Sidebar = () => {
+interface SidebarProps {
+  UUIDs: string[];
+}
+
+const Sidebar = ({ UUIDs }: SidebarProps) => {
   return (
     <div className="sidebar">
       <h5>Your Buckets</h5>
 
       <ul className="tree-view">
-        {data.map((bucket) => {
+        {UUIDs.map((bucket, i) => {
           return (
-            <li key={bucket.id}>
-              <Link to={`/web/${bucket.uuid}`}>{bucket.uuid}</Link>
+            <li key={i}>
+              <Link to={`/web/${bucket}`}>{bucket}</Link>
             </li>
           );
         })}
