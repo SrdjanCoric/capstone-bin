@@ -1,7 +1,9 @@
 // Expected arguments
 // Array containing objects representing requests to bucket
 // We need to pass in UUID separately
+import { useState } from "react";
 import Request from "./Request";
+import { EmptyBucket } from "./EmptyBucket";
 
 const data = [
   {
@@ -103,6 +105,24 @@ const data = [
 ];
 
 const BucketPage = () => {
+  const [state, setState] = useState(data);
+
+  function renderListOrEmpty(stateArray) {
+    if (stateArray.length > 0) {
+      return (
+        <ul className="tree-view">
+          {stateArray.map((request) => {
+            return <Request key={request.id} request={request} />;
+          })}
+        </ul>
+      )
+    } else {
+      return (
+       <EmptyBucket />
+      )
+    }
+  }
+
   return (
     <>
       <div>
@@ -129,11 +149,7 @@ const BucketPage = () => {
         </div>
       </div>
       <hr></hr>
-      <ul className="tree-view">
-        {data.map((request) => {
-          return <Request key={request.id} request={request} />;
-        })}
-      </ul>
+      {renderListOrEmpty(state)}
     </>
   );
 };
