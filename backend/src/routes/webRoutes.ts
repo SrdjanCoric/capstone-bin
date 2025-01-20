@@ -87,7 +87,7 @@ webRouter.get("/:id", async (req, res) => {
         url: current["url"],
         method: current["method"],
         requestTime: current["request_time"],
-        headers: current["headers"],
+        headers: JSON.stringify(current["headers"]),
         body: currentBody ? currentBody.body : "{}",
       });
     }
