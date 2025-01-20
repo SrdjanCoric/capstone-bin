@@ -15,8 +15,8 @@ app.use(morgan("tiny"));
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.use("/web", webRouter);
-app.use("/", requestRouter);
+app.use("/api/web", webRouter);
+app.use("/api", requestRouter);
 
 app.get("*", (req, res) => {
   res.status(404).send("Route not found");
