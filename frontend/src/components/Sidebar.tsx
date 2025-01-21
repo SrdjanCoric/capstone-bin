@@ -13,8 +13,10 @@ const Sidebar = ({ UUIDs }: SidebarProps) => {
             <summary>Your Buckets:</summary>
             <ul>
               {UUIDs.map((bucket, i) => (
-                <li key={i} className="bucket-id">
-                  <Link to={`/web/${bucket}`}>{bucket}</Link>
+                <li key={i}>
+                  <Link to={`/web/${bucket}`}>
+                    {<span className="bucket-id">{bucket}</span>}
+                  </Link>
                 </li>
               ))}
             </ul>
