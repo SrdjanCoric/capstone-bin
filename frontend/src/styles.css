@@ -52,8 +52,17 @@ aside {
   color: green;
   margin-top: 10px;
 }
-.bucket-id {
+.bucket-id:hover {
+  --rem: 16;
+  -webkit-font-smoothing: none;
+  font-family: "Pixelated MS Sans Serif", Arial;
+  font-size: 11px;
+  border-collapse: collapse;
+  text-align: left;
+  white-space: nowrap;
   cursor: pointer;
+  background-color: navy;
+  color: #fff;
 }
 
 .row {
