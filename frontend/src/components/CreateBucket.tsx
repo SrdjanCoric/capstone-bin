@@ -1,9 +1,19 @@
 import { createBucket } from "../services/bucketServices";
+import { Link } from "react-router-dom";
+import Sidebar from "./Sidebar";
 interface CreateBucketProps {
   handleSuccess: (newId: string) => void;
+  UUIDs: string[];
+  successMessage: string;
+  currUUID: string;
 }
 
-const CreateBucket = ({ handleSuccess }: CreateBucketProps) => {
+const CreateBucket = ({
+  handleSuccess,
+  UUIDs,
+  successMessage,
+  currUUID,
+}: CreateBucketProps) => {
   const generateBucket = async () => {
     const bucketID = await createBucket();
     if (bucketID) {
@@ -11,17 +21,59 @@ const CreateBucket = ({ handleSuccess }: CreateBucketProps) => {
     }
   };
 
+  const copyLinkToClipboard = (e: React.SyntheticEvent) => {
+    e.preventDefault();
+    navigator.clipboard
+      .writeText(`localhost:5173/api/${currUUID}`)
+      .then(() => {
+        alert("Copied to clipboard!");
+      })
+      .catch((err) => {
+        console.error("Failed to copy: ", err);
+      });
+  };
+
   return (
     <div className="window">
       <div className="title-bar">
         <div className="title-bar-text">Create New Bucket</div>
-        <div className="title-bar-controls"></div>
+        <div className="title-bar-controls">
+          <button aria-label="Minimize"></button>
+          <button aria-label="Maximize"></button>
+          <button aria-label="Close"></button>
+        </div>
       </div>
       <div className="window-body">
-        <p>Create a bucket to collect and inspect HTTP requests!</p>
-      </div>
-      <div className="bucket-button">
-        <button onClick={generateBucket}>New Bucket</button>
+        <Sidebar UUIDs={UUIDs} />
+        <div className="centered-content">
+          <h4>Welcome to Request Bucket!</h4>
+          {successMessage && (
+            <div className="success">
+              <strong>{successMessage}</strong>
+              <Link to={`/web/${currUUID}`}>{currUUID}</Link>{" "}
+              <span
+                onClick={(e) => {
+                  copyLinkToClipboard(e);
+                }}
+                className="material-symbols-outlined"
+                style={{ fontSize: "14px", cursor: "pointer" }}
+              >
+                content_copy
+              </span>
+            </div>
+          )}
+          <p>
+            Create unique URLs to capture, inspect, and debug HTTP requests with
+            ease.
+          </p>
+          <p>
+            Perfect for testing webhooks, APIs, or any incoming requests—get
+            started in seconds and take control of your debugging process.
+          </p>
+          <div className="bucket-button">
+            <button onClick={generateBucket}>Create Bucket</button>
+          </div>
+        </div>
       </div>
     </div>
   );

@@ -6,19 +6,22 @@ interface SidebarProps {
 
 const Sidebar = ({ UUIDs }: SidebarProps) => {
   return (
-    <div className="sidebar">
-      <h5>Your Buckets</h5>
-
+    <aside>
       <ul className="tree-view">
-        {UUIDs.map((bucket, i) => {
-          return (
-            <li key={i}>
-              <Link to={`/web/${bucket}`}>{bucket}</Link>
-            </li>
-          );
-        })}
+        <li>
+          <details open>
+            <summary>Your Buckets:</summary>
+            <ul>
+              {UUIDs.map((bucket, i) => (
+                <li key={i} className="bucket-id">
+                  <Link to={`/web/${bucket}`}>{bucket}</Link>
+                </li>
+              ))}
+            </ul>
+          </details>
+        </li>
       </ul>
-    </div>
+    </aside>
   );
 };
 
