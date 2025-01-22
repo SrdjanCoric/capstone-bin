@@ -24,7 +24,7 @@ webRouter.post("", async (req, res) => {
         [id],
       );
 
-      if (!result || result.rows.length === 0) {
+      if (!result || result.rowCount === 0) {
         attempts--;
         continue;
       }
