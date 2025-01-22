@@ -51,7 +51,6 @@ export const getBucketData = async (id: string): Promise<RequestData[]> => {
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
-    console.log(await response.json());
     return await response.json();
   } catch (error) {
     console.error("Error getting all bucket data:", error);
