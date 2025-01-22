@@ -5,27 +5,27 @@ import { useState, useEffect } from "react";
 import Request from "./Request";
 import { EmptyBucket } from "./EmptyBucket";
 import { RequestData } from "../types";
-import { useParams } from 'react-router-dom';
+import { useParams } from "react-router-dom";
 import { getBucketData } from "../services/bucketServices";
 
 const BucketPage = () => {
   const uuid = useParams().uuid;
-  const [requests, setRequests] = useState<RequestData[]>([])
+  const [requests, setRequests] = useState<RequestData[]>([]);
 
   useEffect(() => {
     if (uuid) {
       const fetchData = async () => {
-      try {
-        const data = await getBucketData(uuid);
+        try {
+          const data = await getBucketData(uuid);
 
-        setRequests(data)
-      } catch (e: unknown) {
-        console.error(e)
-      }
-    }
+          setRequests(data);
+        } catch (e: unknown) {
+          console.error(e);
+        }
+      };
       fetchData();
     }
-  }, [])
+  }, []);
 
   function renderList(data: RequestData[]) {
     if (data.length > 0) {
@@ -35,14 +35,14 @@ const BucketPage = () => {
             return <Request key={request.id} request={request} />;
           })}
         </ul>
-      )
+      );
     }
   }
 
   return (
     <>
       <div>
-        <div className="window">
+        <div className="window" style={{ marginTop: "50px" }}>
           <div className="title-bar">
             <div className="title-bar-text">Bucket Central</div>
             <div className="title-bar-controls">
@@ -54,8 +54,9 @@ const BucketPage = () => {
           <div className="window-body">
             <div className="centered-content">
               <h4>Welcome to your bucket: {uuid}</h4>
-              <h4>Requests
-              : <span id="requests_count">{requests.length}</span></h4>
+              <h4>
+                Requests : <span id="requests_count">{requests.length}</span>
+              </h4>
               <p>
                 Requests are collected at https://liamturn.dev/{uuid}
                 <kbd className="copy-url-btn">
@@ -63,20 +64,19 @@ const BucketPage = () => {
                     title="Copy URL"
                     className="glyphicon glyphicon-copy"
                   ></span>
-              </kbd>
+                </kbd>
               </p>
               <p>
-                Scroll through your requests, inspect the headers, and body content
+                Scroll through your requests, inspect the headers, and body
+                content
               </p>
             </div>
           </div>
         </div>
       </div>
       <hr></hr>
-     <div>{renderList(requests)}</div>
-      {!requests[0] && (
-        <EmptyBucket />
-      )}
+      <div>{renderList(requests)}</div>
+      {!requests[0] && <EmptyBucket />}
     </>
   );
 };

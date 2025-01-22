@@ -1,4 +1,4 @@
-import { createBucket } from "../services/bucketServices";
+import { createBucket, DOMAIN } from "../services/bucketServices";
 import { Link } from "react-router-dom";
 import Sidebar from "./Sidebar";
 interface CreateBucketProps {
@@ -24,7 +24,7 @@ const CreateBucket = ({
   const copyLinkToClipboard = (e: React.SyntheticEvent) => {
     e.preventDefault();
     navigator.clipboard
-      .writeText(`localhost:5173/api/${currUUID}`)
+      .writeText(`${DOMAIN}/api/${currUUID}`)
       .then(() => {
         alert("Copied to clipboard!");
       })
