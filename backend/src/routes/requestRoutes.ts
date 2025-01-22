@@ -8,37 +8,37 @@ const requestRouter = express.Router();
 requestRouter.all("/:id", async (req, res) => {
   const uuid = req.params.id;
   try {
-    // get bucket pk from bucket using uuid
-    const bucketRow = await pgQuery("SELECT id FROM bucket WHERE uuid = $1", [
-      uuid,
-    ]);
+    //extract requst data
+    const body = JSON.stringify(req.body);
+    const headers = req.headers;
+    const method = req.method;
 
-    // check if the bucket was found
-    if (bucketRow && bucketRow.rows.length > 0) {
-      const bucketId = bucketRow.rows[0].id;
+    // save body to mongo
+    const newBody = new Body({ body });
+    const savedBody = await newBody.save();
 
-      //extract requst data
-      const body = JSON.stringify(req.body);
-      const headers = req.headers;
-      const method = req.method;
+    // insert request data to postgres
+    const result = await pgQuery(
+      `INSERT INTO request (bucket_id, method, headers, url_path, mongo_id)
+        SELECT
+          (SELECT id FROM bucket WHERE uuid = $1),
+          $2,
+          $3,
+          $4,
+          $5
+        WHERE EXISTS (SELECT 1 FROM bucket WHERE uuid = $1);`, // checks that uuid stored in the db before insert attempted
+      [uuid, method, headers, req.originalUrl, savedBody._id.toString()],
+    );
 
-      // save body to mongo
-      const newBody = new Body({ body });
-      const savedBody = await newBody.save();
-
-      // insert request data to postgres
-      const result = await pgQuery(
-        `INSERT INTO request (bucket_id, method, headers, url_path, mongo_id)
-      values ($1, $2, $3, $4, $5);`,
-        [bucketId, method, headers, req.originalUrl, savedBody._id.toString()],
-      );
-
+    // if request table updated return 200
+    if (result && result.rowCount && result.rowCount > 0) {
       res.status(200).send();
       return;
+    } else {
+      // respond with 404 when uuid cannot find valid bucket in Postgres
+      res.status(404).json({ error: "Bucket not found" });
+      return;
     }
-
-    //response with 404 when uuid cannot find valid bucket in Postgres
-    res.status(404).json({ error: "Bucket not found" });
   } catch (e: unknown) {
     console.log(e);
 

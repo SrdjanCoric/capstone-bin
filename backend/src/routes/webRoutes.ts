@@ -14,36 +14,27 @@ webRouter.post("", async (req, res) => {
     while (attempts > 0) {
       const id = genId();
 
-      // Check for existing ID
-      const existingCheck = await pgQuery<{ uuid: string }>(
-        "SELECT uuid FROM bucket WHERE uuid = $1",
+      const result = await pgQuery(
+        `
+        INSERT INTO bucket (uuid)
+        VALUES ($1)
+        ON CONFLICT (uuid) DO NOTHING
+        RETURNING uuid;
+          `,
         [id],
       );
 
-      // Retry if found duplicate found
-      if (!existingCheck || existingCheck.rows.length > 0) {
+      if (!result || result.rows.length === 0) {
         attempts--;
         continue;
-      } else {
-        // Insert UUID when unique
-        const result = await pgQuery<{ uuid: string }>(
-          "INSERT INTO bucket (uuid) VALUES ($1) RETURNING uuid",
-          [id],
-        );
-
-        // Check insert was successful
-        if (!result || result.rows.length === 0) {
-          attempts--;
-          continue;
-        }
-
-        // Respond with new UUID
-        res.json(result.rows[0].uuid);
-        return;
       }
-    }
 
-    throw new Error("Failed to generate unique ID after multiple attempts");
+      // Respond with new UUID
+      res.json(result.rows[0].uuid);
+      return;
+    }
+    res.status(500).send();
+    return;
   } catch (e: unknown) {
     console.log(e);
     res.status(500).send();
@@ -55,15 +46,15 @@ webRouter.get("/:id", async (req, res) => {
   try {
     const queryResult = await pgQuery(
       `SELECT
-          r.*
+          *
        FROM
-          bucket b
+          bucket
        JOIN
-          request r ON b.id = r.bucket_id
+          request ON bucket.id = request.bucket_id
        WHERE
-          b.uuid = $1
+          bucket.uuid = $1
        ORDER BY
-          r.request_time DESC;`,
+          request.request_time DESC;`,
       [uuid],
     );
 
