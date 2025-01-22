@@ -1,9 +1,11 @@
-html,
-/* body {
+html, /* body {
   background-image: url("https://wallpapers.com/images/high/windows-98-background-mvrmy77vuyblzxba.webp");
   background-size: auto 100vh;
 ll  */
 
+* {
+  font-family: "Pixelated MS Sans Serif", Arial;
+}
 
 body {
   margin: 0;
