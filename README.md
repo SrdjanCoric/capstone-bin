@@ -6,17 +6,17 @@ Request Bucket NY is a web service to collect arbitrary HTTP requests and inspec
 It is strongly inspired by the requirements of the team assignment given by the esteemed Instructor Srdjan Coric in week 3 of Capstone
 
 In this app:
-- a user can create a unique bin
-- each bin is associated with two urls: 
-  - one for sending requests to the bin
-  - one for viewing requests made to the bin
+- a user can create a unique buckect
+- each bucket is associated with two urls: 
+  - one for sending requests to the bucket
+  - one for viewing requests made to the bucket
     
-- when requests are made to the bin, the request method, path, headers, and body are displayed on the UI
-- a list of total requests made to a bin are visible to the user
+- when requests are made to the bucket, the request method, path, headers, and body are displayed on the UI
+- the user can see a list of total requests made to a bucket
 - the user can click past requests from this list and view data for that request
-- bin and request data are stored in PostgeSQL
-- request payload data is stored in MongoDB
-
-- associate a user with a specific bin, so that the same visitor can navigate back to the same bin after closing and reopening the window. 
-- the front end uses React 
+- the bucket and request data are stored in PostgeSQL
+- the request payload data is stored in MongoDB
+- the user is associated with a specific bucket, so that the same visitor can navigate back to the same bucket after closing and reopening the window
 - the user can easily click a button to copy the endpoint
+- the front end uses React 
+
