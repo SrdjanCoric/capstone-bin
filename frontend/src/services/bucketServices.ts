@@ -1,11 +1,17 @@
 import { RequestData } from "../types";
 
+const host = location.hostname;
+const domain =
+  host === "localhost"
+    ? `${location.protocol}//${host}:${location.port}`
+    : `${location.protocol}//${host}`;
+
 // post /web
 // creates a new bucket
 // adds to local storage
 export const createBucket = async (): Promise<string | null> => {
   try {
-    const response = await fetch("http://localhost:5173/api/web", {
+    const response = await fetch(`${domain}/api/web`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -46,7 +52,7 @@ export const getAllBuckets = (): string[] => {
 // gets all data for a specific endpoint
 export const getBucketData = async (id: string): Promise<RequestData[]> => {
   try {
-    const response = await fetch(`http://localhost:5173/api/web/${id}`);
+    const response = await fetch(`${domain}/api/web/${id}`);
 
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
