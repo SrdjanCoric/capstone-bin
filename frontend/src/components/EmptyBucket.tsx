@@ -1,11 +1,17 @@
-export const EmptyBucket = () => {
+interface EmptyBucketProps {
+  uuid: string;
+}
+
+export const EmptyBucket = ({ uuid }: EmptyBucketProps) => {
   return (
     <>
-      <div className="" id="empty_basket">
+      <div className="centered-content" id="empty_basket">
         <h2>Empty basket!</h2>
-        <p>This basket is empty, send requests to <kbd className="basket_uri">https://.....</kbd>
-          <kbd className="copy-url-btn"><span title="Copy URL" className="glyphicon glyphicon-copy"></span></kbd> and they will appear here.</p>
+        <p>
+          This basket is empty, send requests to{" "}
+          {`https://liamturner.dev/api/${uuid}`} and they will appear here.
+        </p>
       </div>
     </>
-  )
-}
+  );
+};

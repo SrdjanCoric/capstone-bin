@@ -1,6 +1,7 @@
 import { createBucket, DOMAIN } from "../services/bucketServices";
 import { Link } from "react-router-dom";
 import Sidebar from "./Sidebar";
+import { copyLinkToClipboard } from "../utils";
 interface CreateBucketProps {
   handleSuccess: (newId: string) => void;
   UUIDs: string[];
@@ -19,18 +20,6 @@ const CreateBucket = ({
     if (bucketID) {
       handleSuccess(bucketID);
     }
-  };
-
-  const copyLinkToClipboard = (e: React.SyntheticEvent) => {
-    e.preventDefault();
-    navigator.clipboard
-      .writeText(`${DOMAIN}/api/${currUUID}`)
-      .then(() => {
-        alert("Copied to clipboard!");
-      })
-      .catch((err) => {
-        console.error("Failed to copy: ", err);
-      });
   };
 
   return (
@@ -53,7 +42,7 @@ const CreateBucket = ({
               <Link to={`/web/${currUUID}`}>{currUUID}</Link>{" "}
               <span
                 onClick={(e) => {
-                  copyLinkToClipboard(e);
+                  copyLinkToClipboard(e, DOMAIN, currUUID);
                 }}
                 className="material-symbols-outlined"
                 style={{ fontSize: "14px", cursor: "pointer" }}
