@@ -1,12 +1,14 @@
 // Expected arguments
 // Array containing objects representing requests to bucket
 // We need to pass in UUID separately
+import { DOMAIN } from "../services/bucketServices";
 import { useState, useEffect } from "react";
 import Request from "./Request";
 import { EmptyBucket } from "./EmptyBucket";
 import { RequestData } from "../types";
 import { useParams } from "react-router-dom";
 import { getBucketData } from "../services/bucketServices";
+import { copyLinkToClipboard } from "../utils";
 
 const BucketPage = () => {
   const uuid = useParams().uuid;
@@ -58,12 +60,18 @@ const BucketPage = () => {
                 Requests : <span id="requests_count">{requests.length}</span>
               </h4>
               <p>
-                Requests are collected at https://liamturn.dev/{uuid}
+                Requests are collected at https://liamturner.dev/api/{uuid}
                 <kbd className="copy-url-btn">
                   <span
-                    title="Copy URL"
-                    className="glyphicon glyphicon-copy"
-                  ></span>
+                    onClick={(e) => {
+                      if (typeof uuid === "string")
+                        copyLinkToClipboard(e, DOMAIN, uuid);
+                    }}
+                    className="material-symbols-outlined"
+                    style={{ fontSize: "14px", cursor: "pointer" }}
+                  >
+                    content_copy
+                  </span>
                 </kbd>
               </p>
               <p>
@@ -76,7 +84,7 @@ const BucketPage = () => {
       </div>
       <hr></hr>
       <div>{renderList(requests)}</div>
-      {!requests[0] && <EmptyBucket />}
+      {!requests[0] && <EmptyBucket uuid={uuid!} />}
     </>
   );
 };

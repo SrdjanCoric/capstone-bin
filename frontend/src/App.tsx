@@ -10,7 +10,6 @@ function App() {
   return (
     <>
       <Header />
-
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/web/:uuid" element={<BucketPage />} />
