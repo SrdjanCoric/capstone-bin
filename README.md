@@ -18,6 +18,5 @@ In this app:
 - request payload data is stored in MongoDB
 
 - associate a user with a specific bin, so that the same visitor can navigate back to the same bin after closing and reopening the window. 
-- real-time functionality via websockets so requests show up on the UI without a page refresh
 - the front end uses React 
 - the user can easily click a button to copy the endpoint
