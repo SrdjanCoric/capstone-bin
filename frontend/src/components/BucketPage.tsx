@@ -3,11 +3,11 @@
 // We need to pass in UUID separately
 import { DOMAIN } from "../services/bucketServices";
 import { useState, useEffect } from "react";
-import Request from "./Request";
 import { EmptyBucket } from "./EmptyBucket";
 import { RequestData } from "../types";
 import { useParams } from "react-router-dom";
 import { getBucketData } from "../services/bucketServices";
+import { List } from "./List";
 import { copyLinkToClipboard } from "../utils";
 
 const BucketPage = () => {
@@ -28,18 +28,6 @@ const BucketPage = () => {
       fetchData();
     }
   }, []);
-
-  function renderList(data: RequestData[]) {
-    if (data.length > 0) {
-      return (
-        <ul className="tree-view">
-          {data.map((request) => {
-            return <Request key={request.id} request={request} />;
-          })}
-        </ul>
-      );
-    }
-  }
 
   return (
     <>
@@ -83,8 +71,8 @@ const BucketPage = () => {
         </div>
       </div>
       <hr></hr>
-      <div>{renderList(requests)}</div>
-      {!requests[0] && <EmptyBucket uuid={uuid!} />}
+      {requests && <List requests={requests}/>}
+      {!requests && <EmptyBucket uuid={uuid!} />}
     </>
   );
 };
