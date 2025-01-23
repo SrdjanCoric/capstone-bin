@@ -2,6 +2,7 @@ import { createBucket, DOMAIN } from "../services/bucketServices";
 import { Link } from "react-router-dom";
 import Sidebar from "./Sidebar";
 import { copyLinkToClipboard } from "../utils";
+
 interface CreateBucketProps {
   handleSuccess: (newId: string) => void;
   UUIDs: string[];

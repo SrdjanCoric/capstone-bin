@@ -6,6 +6,7 @@ import BucketPage from "./components/BucketPage";
 
 import "98.css";
 import "./styles.css";
+
 function App() {
   return (
     <>
