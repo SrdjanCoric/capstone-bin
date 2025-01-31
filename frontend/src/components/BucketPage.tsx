@@ -12,9 +12,9 @@ import LoadingSpinner from "./LoadingSpinner";
 import CopyButton from "./CopyButton";
 
 const BucketPage = () => {
-  const uuid = useParams().uuid;
+  const { uuid } = useParams<{ uuid: string }>();
   const [requests, setRequests] = useState<RequestData[]>([]);
-  const [isLoading, setIsLoading] = useState(true); // Add this state
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     if (uuid) {
@@ -32,6 +32,28 @@ const BucketPage = () => {
       fetchData();
     }
   }, [uuid]);
+
+  if (!uuid) {
+    return (
+      <div className="window" style={{ marginTop: "50px" }}>
+        <div className="title-bar">
+          <div className="title-bar-text">Error</div>
+          <div className="title-bar-controls">
+            <button aria-label="Minimize"></button>
+            <button aria-label="Maximize"></button>
+            <button aria-label="Close"></button>
+          </div>
+        </div>
+        <div className="window-body">
+          <div className="centered-content">
+            <h4>Invalid Bucket ID</h4>
+            <p>Please check the URL and try again.</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   if (isLoading) {
     return <LoadingSpinner />; // Show loading spinner while loading
   }
