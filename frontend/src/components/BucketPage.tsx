@@ -8,11 +8,13 @@ import { RequestData } from "../types";
 import { useParams } from "react-router-dom";
 import { getBucketData } from "../services/bucketServices";
 import { List } from "./List";
-import { copyLinkToClipboard } from "../utils";
+import LoadingSpinner from "./LoadingSpinner";
+import CopyButton from "./CopyButton";
 
 const BucketPage = () => {
   const uuid = useParams().uuid;
   const [requests, setRequests] = useState<RequestData[]>([]);
+  const [isLoading, setIsLoading] = useState(true); // Add this state
 
   useEffect(() => {
     if (uuid) {
@@ -23,12 +25,20 @@ const BucketPage = () => {
           setRequests(data);
         } catch (e: unknown) {
           console.error(e);
+        } finally {
+          setIsLoading(false);
         }
       };
       fetchData();
     }
-  }, []);
+  }, [uuid]);
+  if (isLoading) {
+    return <LoadingSpinner />; // Show loading spinner while loading
+  }
 
+  if (requests.length === 0) {
+    return <EmptyBucket uuid={uuid!} />;
+  }
   return (
     <>
       <div>
@@ -48,19 +58,8 @@ const BucketPage = () => {
                 Requests : <span id="requests_count">{requests.length}</span>
               </h4>
               <p>
-                Requests are collected at https://liamturner.dev/api/{uuid}
-                <kbd className="copy-url-btn">
-                  <span
-                    onClick={(e) => {
-                      if (typeof uuid === "string")
-                        copyLinkToClipboard(e, DOMAIN, uuid);
-                    }}
-                    className="material-symbols-outlined"
-                    style={{ fontSize: "14px", cursor: "pointer" }}
-                  >
-                    content_copy
-                  </span>
-                </kbd>
+                {`Requests are collected at ${DOMAIN}/api/${uuid}`}
+                <CopyButton domain={DOMAIN} uuid={uuid} />
               </p>
               <p>
                 Scroll through your requests, inspect the headers, and body
@@ -71,7 +70,7 @@ const BucketPage = () => {
         </div>
       </div>
       <hr></hr>
-      {requests && <List requests={requests}/>}
+      {requests && <List requests={requests} />}
       {!requests && <EmptyBucket uuid={uuid!} />}
     </>
   );

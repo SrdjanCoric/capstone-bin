@@ -13,13 +13,14 @@ console.log(config);
 
 async function pgQuery<T extends QueryResultRow>(
   sql: string,
-  args?: any[],
+  args?: any[]
 ): Promise<QueryResult<T> | null> {
   const client = new Client(config);
 
   try {
     await client.connect();
-
+    console.log("here");
+    console.log("Connected to database:", client.database);
     const res = await client.query(sql, args);
     return res;
   } catch (err) {

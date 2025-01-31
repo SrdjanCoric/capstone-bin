@@ -1,7 +1,7 @@
 import { createBucket, DOMAIN } from "../services/bucketServices";
 import { Link } from "react-router-dom";
 import Sidebar from "./Sidebar";
-import { copyLinkToClipboard } from "../utils";
+import CopyButton from "./CopyButton";
 
 interface CreateBucketProps {
   handleSuccess: (newId: string) => void;
@@ -41,15 +41,7 @@ const CreateBucket = ({
             <div className="success">
               <strong>{successMessage}</strong>
               <Link to={`/web/${currUUID}`}>{currUUID}</Link>{" "}
-              <span
-                onClick={(e) => {
-                  copyLinkToClipboard(e, DOMAIN, currUUID);
-                }}
-                className="material-symbols-outlined"
-                style={{ fontSize: "14px", cursor: "pointer" }}
-              >
-                content_copy
-              </span>
+              <CopyButton domain={DOMAIN} uuid={currUUID} />
             </div>
           )}
           <p>
