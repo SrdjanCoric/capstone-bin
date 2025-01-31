@@ -9,8 +9,6 @@ const port = Number(process.env.POSTGRES_PORT);
 const config = { user, host, database, port };
 Object.assign(config, password ? { password } : {});
 
-console.log(config);
-
 async function pgQuery<T extends QueryResultRow>(
   sql: string,
   args?: any[]
