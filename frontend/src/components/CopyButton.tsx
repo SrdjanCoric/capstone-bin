@@ -8,13 +8,13 @@ type CopyButtonProps = {
 const CopyButton = ({ domain, uuid }: CopyButtonProps) => {
   const [showCopied, setShowCopied] = useState(false);
 
-  const handleCopy = (e: React.SyntheticEvent) => {
+  const handleCopy = (e: React.MouseEvent) => {
     e.preventDefault();
     navigator.clipboard
       .writeText(`${domain}/api/${uuid}`)
       .then(() => {
         setShowCopied(true);
-        setTimeout(() => setShowCopied(false), 2000); // Hide after 2 seconds
+        setTimeout(() => setShowCopied(false), 1500);
       })
       .catch((err) => {
         console.error("Failed to copy: ", err);
@@ -22,7 +22,29 @@ const CopyButton = ({ domain, uuid }: CopyButtonProps) => {
   };
 
   return (
-    <span className="inline-flex items-center gap-2">
+    <span
+      style={{
+        position: "relative",
+        display: "inline-block",
+        verticalAlign: "middle",
+      }}
+    >
+      {showCopied && (
+        <span
+          style={{
+            position: "absolute",
+            right: "-25px",
+            top: "-20px",
+            fontFamily: '"Pixelated MS Sans Serif", Arial',
+            fontSize: "11px",
+            zIndex: 50,
+            whiteSpace: "nowrap",
+            display: "block",
+          }}
+        >
+          Copied
+        </span>
+      )}
       <kbd className="copy-url-btn">
         <span
           onClick={handleCopy}
@@ -32,14 +54,6 @@ const CopyButton = ({ domain, uuid }: CopyButtonProps) => {
           content_copy
         </span>
       </kbd>
-      {showCopied && (
-        <span
-          className="text-xs"
-          style={{ fontFamily: '"Pixelated MS Sans Serif", Arial' }}
-        >
-          Copied!
-        </span>
-      )}
     </span>
   );
 };

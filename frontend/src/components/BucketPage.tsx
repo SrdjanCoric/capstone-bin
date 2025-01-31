@@ -80,7 +80,8 @@ const BucketPage = () => {
                 Requests : <span id="requests_count">{requests.length}</span>
               </h4>
               <p>
-                {`Requests are collected at ${DOMAIN}/api/${uuid}`}
+                Requests are collected at {DOMAIN}
+                <span>/api/{uuid}</span>
                 <CopyButton domain={DOMAIN} uuid={uuid} />
               </p>
               <p>

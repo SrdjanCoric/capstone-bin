@@ -55,6 +55,7 @@ aside {
   align-self: center;
   color: green;
   margin-top: 10px;
+  display: inline-block;
 }
 .bucket-id:hover {
   --rem: 16;
